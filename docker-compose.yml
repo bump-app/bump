@@ -1,0 +1,52 @@
+version: '2'
+
+volumes:
+  postgres:
+    driver: local
+  node_modules:
+    driver: local
+
+services:
+  # Database servers
+  postgres:
+    image: postgres:9.4
+    environment:
+      PGDATA: /var/lib/postgresql/data/pgdata
+      POSTGRES_PASSWORD: mysecretpassword
+      POSTGRES_USER: postgres
+    volumes:
+      - postgres:/var/lib/postgresql/data
+    ports: ['5432:5432']
+  # redis:
+    # image: redis
+
+  # Web server, routing /api and / to server, client respectively
+  router:
+    build: ./router
+    links: [client, server]
+    ports: [80]
+
+  # Flask server
+  server:
+    # links: [postgres, redis]
+    links: [postgres]
+    build: ./server
+    volumes:
+      - ./server:/opt/bump/server
+    environment:
+      DATABASE_URL: 'postgresql://postgres:mysecretpassword@postgres/'
+  #     REDIS_URL: 'redis://redis/1'
+
+  # Ember server
+  client:
+    build: ./client
+    volumes:
+      - ./client:/opt/bump/client
+      # - /root/.cache/yarn
+      - /opt/bump/client/node_modules
+      - /opt/bump/client/bower_components
+    tmpfs:
+      - /opt/bump/client/tmp
+    environment:
+      EMBER_ENV: development
+    ports: ['57777:57777']

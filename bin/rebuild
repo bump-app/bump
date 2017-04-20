@@ -1,0 +1,16 @@
+#!/bin/bash
+
+cd "$(dirname "$0")/../"
+
+./bin/check_for_updates
+
+docker-compose stop $@
+docker-compose rm -f $@
+docker-compose build $@
+
+if [[ "$@" == "server" ]]; then
+	docker-compose run --rm server make reset-db
+	docker-compose run --rm server make seed
+fi
+
+docker-compose up -d $@
