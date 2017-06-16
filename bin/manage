@@ -1,0 +1,3 @@
+#!/bin/bash
+
+docker-compose exec server sh -c "python3 manage.py $@"

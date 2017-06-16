@@ -26,7 +26,7 @@ services:
     links: [client, server]
     ports: [80]
 
-  # Flask server
+  # Django server
   server:
     # links: [postgres, redis]
     links: [postgres]
