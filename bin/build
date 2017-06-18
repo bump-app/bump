@@ -1,5 +1,5 @@
 #!/bin/bash
 
 docker-compose build
-docker-compose run --rm server make init-db
-docker-compose run --rm server make seed
+docker-compose run --rm server rake db:create
+docker-compose run --rm server rake db:setup RAILS_ENV=test

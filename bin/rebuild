@@ -7,10 +7,4 @@ cd "$(dirname "$0")/../"
 docker-compose stop $@
 docker-compose rm -f $@
 docker-compose build $@
-
-if [[ "$@" == "server" ]]; then
-	docker-compose run --rm server make reset-db
-	docker-compose run --rm server make seed
-fi
-
 docker-compose up -d $@

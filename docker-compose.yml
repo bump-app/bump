@@ -26,8 +26,8 @@ services:
     links: [client, server]
     ports: [80]
 
-  # Flask server
-  server:
+  # Rails server
+  server: &rails
     # links: [postgres, redis]
     links: [postgres]
     build: ./server
@@ -35,6 +35,7 @@ services:
       - ./server:/opt/bump/server
     environment:
       DATABASE_URL: 'postgresql://postgres:mysecretpassword@postgres/'
+      RAILS_ENV: development
   #     REDIS_URL: 'redis://redis/1'
 
   # Ember server
